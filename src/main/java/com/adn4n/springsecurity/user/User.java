@@ -1,5 +1,6 @@
 package com.adn4n.springsecurity.user;
 
+import com.adn4n.springsecurity.token.Token;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,6 +28,8 @@ public class User implements UserDetails {
     private String password;
     @Enumerated(EnumType.STRING)
     private Role role;
+    @OneToMany(mappedBy = "user")
+    private List<Token> tokens;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
