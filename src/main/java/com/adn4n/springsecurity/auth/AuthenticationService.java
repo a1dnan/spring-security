@@ -25,7 +25,7 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public AuthenticationResposne register(RegisterRequest request) {
+    public AuthenticationResponse register(RegisterRequest request) {
         var user = User.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
@@ -36,12 +36,12 @@ public class AuthenticationService {
         var savedUser = userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
         saveUserToken(savedUser, jwtToken);
-        return AuthenticationResposne.builder()
-                .token(jwtToken)
+        return AuthenticationResponse.builder()
+                .accessToken(jwtToken)
                 .build();
     }
 
-    public AuthenticationResposne authenticate(AuthenticationRequest request) {
+    public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
@@ -53,8 +53,8 @@ public class AuthenticationService {
         var jwtToken = jwtService.generateToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user,jwtToken);
-        return AuthenticationResposne.builder()
-                .token(jwtToken)
+        return AuthenticationResponse.builder()
+                .accessToken(jwtToken)
                 .build();
     }
 
